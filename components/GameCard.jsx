@@ -1,23 +1,40 @@
-import { useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Image, Animated } from 'react-native';
-import { Score } from './Score';
+import { useEffect, useRef } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Animated,
+  Pressable,
+} from "react-native";
+import { Score } from "./Score";
+import { Link } from "expo-router";
+import { styled } from "nativewind";
+
+const StyledPressable = styled(Pressable);
 
 export function GameCard({ game }) {
-    return (
-      <View key={game.slug} className='flex-row bg-slate-400/10 p-4 rounded-xl gap-4 mb-10'>
-        <Image source={{ uri: game.image }} style={styles.image} />
-        <View>
-          <Text style={styles.title} className='mb-1'>{game.title}</Text>
-          <Score score={game.score} maxScore={100} />
-          <Text style={styles.description} className='mt-2 flex-shrink-0'>
-            {game.description.slice(0, 100)} ...
-          </Text>
+  return (
+    <Link href={`/${game.slug}`} asChild>
+      <StyledPressable className="active:opacity-70 border border-black active:border-white/50 mb-2 bg-gray-500/10 rounder-xl p-4">
+        <View key={game.slug} className="flex-row gap-4">
+          <Image source={{ uri: game.image }} style={styles.image} />
+          <View className="flex-shrink">
+            <Text style={styles.title} className="mb-1">
+              {game.title}
+            </Text>
+            <Score score={game.score} maxScore={100} />
+            <Text style={styles.description} className="mt-2 flex-shrink">
+              {game.description.slice(0, 100)}...
+            </Text>
+          </View>
         </View>
-      </View>
-    );
+      </StyledPressable>
+    </Link>
+  );
 }
 
-export function AnimatedGameCard({ game, index}) {
+export function AnimatedGameCard({ game, index }) {
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -25,7 +42,7 @@ export function AnimatedGameCard({ game, index}) {
       toValue: 1,
       duration: 500,
       delay: index * 500,
-      useNativeDriver: true
+      useNativeDriver: true,
     }).start();
   }, [opacity, index]);
 
@@ -37,26 +54,25 @@ export function AnimatedGameCard({ game, index}) {
 }
 
 const styles = StyleSheet.create({
-    title: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: '#dbdbdb'
-    },
-    description: {
-      fontSize: 16,
-      color: '#dbdbdb'
-    },
-    image: {
-      width: 100,
-      height: 100,
-    },
-    card: {
-      marginBottom: 30,
-    },
-    score: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: 'green',
-    }
-  });
-  
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#dbdbdb",
+  },
+  description: {
+    fontSize: 16,
+    color: "#dbdbdb",
+  },
+  image: {
+    width: 100,
+    height: 100,
+  },
+  card: {
+    marginBottom: 30,
+  },
+  score: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "green",
+  },
+});
